@@ -1,0 +1,21 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# Author: Christian Brodbeck <christianbrodbeck@nyu.edu>
+import argparse
+
+# create the top-level parser
+parser = argparse.ArgumentParser()
+# parser.add_argument('--foo', action='store_true', help='foo help')
+subparsers = parser.add_subparsers(help='sub-command help')
+
+# author-names
+subparser = subparsers.add_parser('authors', help='Clean up author names')
+subparser.add_argument('bar', type=int, help='bar help')
+
+# journal abbreviations
+parser = subparsers.add_parser('abbr')
+parser.add_argument('command', help=" | journal-abbr")
+parser.parse_args()
+
+if parser.command == 'author-names':
+
