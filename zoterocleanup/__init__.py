@@ -2,5 +2,5 @@
 
 from ._authors import rename_author, merge_authors
 from ._automerge import auto_merge
-from ._tags import remove_stars
+from ._tags import remove_stars, merge_duplicate_tags
 from ._zotero import connect
