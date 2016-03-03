@@ -89,6 +89,9 @@ def merge_authors(library=None):
     print("Retrieving Library...")
     items = z.everything(z.top())
 
+    # filter out ones wthout authors
+    items = [i for i in items if 'creators' in i['data']]
+
     print("Resolving author names...")
     changed_items = set()
 

@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # Author: Christian Brodbeck <christianbrodbeck@nyu.edu>
 import argparse
+from zoterocleanup import merge_authors
 
 # create the top-level parser
 parser = argparse.ArgumentParser()
@@ -10,12 +11,12 @@ subparsers = parser.add_subparsers(help='sub-command help')
 
 # author-names
 subparser = subparsers.add_parser('authors', help='Clean up author names')
-subparser.add_argument('bar', type=int, help='bar help')
+# subparser.add_argument('bar', type=int, help='bar help')
+subparser.set_defaults(func=merge_authors)
 
 # journal abbreviations
-parser = subparsers.add_parser('abbr')
-parser.add_argument('command', help=" | journal-abbr")
-parser.parse_args()
+# subparser = subparsers.add_parser('abbr')
+# subparser.add_argument('command', help=" | journal-abbr")
 
-if parser.command == 'author-names':
-
+args = parser.parse_args()
+args.func()
