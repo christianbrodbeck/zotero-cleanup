@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # Author: Christian Brodbeck <christianbrodbeck@nyu.edu>
 import argparse
-from zoterocleanup import merge_authors
+from zoterocleanup import merge_authors, check_for_missing_dois
 
 # create the top-level parser
 parser = argparse.ArgumentParser()
@@ -17,6 +17,10 @@ subparser.set_defaults(func=merge_authors)
 # journal abbreviations
 # subparser = subparsers.add_parser('abbr')
 # subparser.add_argument('command', help=" | journal-abbr")
+
+# DOIs
+subparser = subparsers.add_parser('doi', help='Check for missing DOIs')
+subparser.set_defaults(func=check_for_missing_dois)
 
 args = parser.parse_args()
 args.func()

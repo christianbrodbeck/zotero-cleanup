@@ -11,4 +11,5 @@ setup(name='zoterocleanup',
       author_email='christianbrodbeck@nyu.edu',
       url='https://github.com/christianbrodbeck/zotero-cleanup',
       packages=['zoterocleanup'],
+      scripts=['bin/zoterocleanup'],
       install_requires=['pyzotero', 'keyring >= 5.0'])
