@@ -97,6 +97,7 @@ def merge_authors(library=None):
 
     # decompose full names
     decomposed = {}  # full -> first, last
+    ignored = set()
     for i, item in enumerate(items):
         for person in item['data']['creators']:
             if 'name' in person:
@@ -115,7 +116,8 @@ def merge_authors(library=None):
                         if m:
                             first, last = m.groups()
                         else:
-                            raise ValueError("Unknown name pattern: %s" % name)
+                            ignored.add(name)
+                            continue
                     decomposed[name] = (last, first)
                 person['firstName'] = first
                 person['lastName'] = last
@@ -125,6 +127,8 @@ def merge_authors(library=None):
     re_decomposed = {}  # {(first, last): (first, last)}
     for i, item in enumerate(items):
         for person in item['data']['creators']:
+            if 'name' in person:
+                continue
             first = person['firstName']
             last = person['lastName']
             for prefix in PREFIXES:
@@ -142,6 +146,8 @@ def merge_authors(library=None):
     normalized = defaultdict(dict)  # {last: {first -> normalized_first}}
     for i, item in enumerate(items):
         for person in item['data']['creators']:
+            if 'name' in person:
+                continue
             first = person['firstName']
             last = person['lastName']
             first_g = Given.from_namestring(first)
@@ -175,6 +181,8 @@ def merge_authors(library=None):
     # apply first name merges
     for i, item in enumerate(items):
         for person in item['data']['creators']:
+            if 'name' in person:
+                continue
             last = person['lastName']
             if last not in merge:
                 continue
@@ -215,6 +223,10 @@ def merge_authors(library=None):
         print "  %s" % last
         for pair in merge[last].iteritems():
             print "    %s -> %s" % pair
+    if ignored:
+        print("Ignored author names:")
+        for name in sorted(ignored):
+            print("  %s" % name)
 
     # ask for confirmation/apply
     if ask("Apply changes?") == 'y':
