@@ -66,7 +66,7 @@ class Given(object):
         return Given(out)
 
 
-def merge_authors(library=None):
+def merge_authors(library=None, verbose=True):
     """Find and merge different variations of author names
 
     Parameters
@@ -192,37 +192,51 @@ def merge_authors(library=None):
             person['firstName'] = merge[last][first]
             changed_items.add(i)
 
+    if not changed_items:
+        print("No changes found.")
+        return
+
     # print changes
-    print "Decomposed:"
-    for full in sorted(decomposed):
-        last, first = decomposed[full]
-        print "  %s -> %s, %s" % (full, last, first)
-    print "Re-Decomposed:"
-    for (l, f) in sorted(re_decomposed):
-        nl, nf = re_decomposed[(l, f)]
-        print "  %s, %s -> %s, %s" % (l, f, nl, nf)
-    print "Remaining separate:"
-    for last in sorted(people):
-        first_names = people[last]
-        remaining_first = []
-        if len(first_names) > 1:
-            mapping = merge.get(last, {})
-            for first in first_names:
-                if first.namestring not in mapping:
-                    remaining_first.append(first.namestring)
-        if len(remaining_first) > 1:
-            print "  %s: %s" % (last, ', '.join(remaining_first))
-    print "Normalized:"
-    for last in sorted(normalized):
-        mapping = normalized[last]
-        print "  %s" % last
-        for pair in mapping.iteritems():
-            print "    %s -> %s" % pair
-    print "To be merged:"
-    for last in sorted(merge):
-        print "  %s" % last
-        for pair in merge[last].iteritems():
-            print "    %s -> %s" % pair
+    if decomposed:
+        print "Decomposed:"
+        for full in sorted(decomposed):
+            last, first = decomposed[full]
+            print "  %s -> %s, %s" % (full, last, first)
+    if re_decomposed:
+        print "Re-Decomposed:"
+        for (l, f) in sorted(re_decomposed):
+            nl, nf = re_decomposed[(l, f)]
+            print "  %s, %s -> %s, %s" % (l, f, nl, nf)
+    if verbose:
+        # find people remaining separate
+        remaining_separate = []
+        for last in sorted(people):
+            first_names = people[last]
+            remaining_first = []
+            if len(first_names) > 1:
+                mapping = merge.get(last, {})
+                for first in first_names:
+                    if first.namestring not in mapping:
+                        remaining_first.append(first.namestring)
+            if len(remaining_first) > 1:
+                remaining_separate.append((last, remaining_first))
+        if remaining_separate:
+            print "Remaining separate:"
+            for last, remaining_first in remaining_separate:
+                print "  %s: %s" % (last, ', '.join(remaining_first))
+    if normalized:
+        print "Normalized:"
+        for last in sorted(normalized):
+            mapping = normalized[last]
+            print "  %s" % last
+            for pair in mapping.iteritems():
+                print "    %s -> %s" % pair
+    if merge:
+        print "To be merged:"
+        for last in sorted(merge):
+            print "  %s" % last
+            for pair in merge[last].iteritems():
+                print "    %s -> %s" % pair
     if ignored:
         print("Ignored author names:")
         for name in sorted(ignored):

@@ -22,8 +22,12 @@ subparser = subparsers.add_parser(
     'merge-authors',
     help='Find author names that seem to be different spellings of the same '
          'author. ')
+subparser.add_argument(
+    '-v', '--verbose',
+    action='store_true',
+    help="Display more information")
 subparser.set_defaults(
-    func=lambda a: merge_authors(a.library))
+    func=lambda a: merge_authors(a.library, a.verbose))
 
 # journal abbreviations
 # subparser = subparsers.add_parser('abbr')
