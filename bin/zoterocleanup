@@ -12,8 +12,9 @@ subparsers = parser.add_subparsers(help='sub-command help')
 
 # author-names
 subparser = subparsers.add_parser(
-    'authors',
-    help='Clean up author names')
+    'merge-authors',
+    help='Find author names that seem to be different spellings of the same '
+         'author. ')
 subparser.set_defaults(
     func=lambda a: merge_authors())
 
