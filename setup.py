@@ -12,4 +12,4 @@ setup(name='zoterocleanup',
       url='https://github.com/christianbrodbeck/zotero-cleanup',
       packages=['zoterocleanup'],
       scripts=['bin/zoterocleanup'],
-      install_requires=['pyzotero', 'keyring >= 5.0'])
+      install_requires=['pyzotero', 'keyring >= 5.0', 'beautifulsoup4'])

@@ -2,25 +2,49 @@
 # -*- coding: utf-8 -*-
 # Author: Christian Brodbeck <christianbrodbeck@nyu.edu>
 import argparse
-from zoterocleanup import merge_authors, check_for_missing_dois
+from zoterocleanup import merge_authors, check_for_missing_dois, remove_notes
+from zoterocleanup._notes import AUTO_TOC_START
+
 
 # create the top-level parser
 parser = argparse.ArgumentParser()
-# parser.add_argument('--foo', action='store_true', help='foo help')
 subparsers = parser.add_subparsers(help='sub-command help')
 
 # author-names
-subparser = subparsers.add_parser('authors', help='Clean up author names')
-# subparser.add_argument('bar', type=int, help='bar help')
-subparser.set_defaults(func=merge_authors)
+subparser = subparsers.add_parser(
+    'authors',
+    help='Clean up author names')
+subparser.set_defaults(
+    func=lambda a: merge_authors())
 
 # journal abbreviations
 # subparser = subparsers.add_parser('abbr')
 # subparser.add_argument('command', help=" | journal-abbr")
 
 # DOIs
-subparser = subparsers.add_parser('doi', help='Check for missing DOIs')
-subparser.set_defaults(func=check_for_missing_dois)
+subparser = subparsers.add_parser(
+    'doi',
+    help='Check for missing DOIs')
+subparser.set_defaults(
+    func=lambda a: check_for_missing_dois())
 
+# notes
+subparser = subparsers.add_parser(
+    'remove-notes',
+    help='Remove notes matchin a given pattern from attachments. The default '
+         'is to remove auto-generated ')
+subparser.add_argument(
+    '-q', '--quiet',
+    dest='verbose',
+    action='store_false',
+    help="Don't print the content of the matching notes")
+subparser.add_argument(
+    '-p', '--pattern',
+    default=AUTO_TOC_START,
+    help="Pattern to match notes")
+subparser.set_defaults(
+    func=lambda a: remove_notes(a.verbose, a.pattern))
+
+# parse and execute
 args = parser.parse_args()
-args.func()
+args.func(args)
