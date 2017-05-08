@@ -8,6 +8,13 @@ from zoterocleanup._notes import AUTO_TOC_START
 
 # create the top-level parser
 parser = argparse.ArgumentParser()
+parser.add_argument(
+    '--library', default=None,
+    help='Use a specific library. A valid library ID is a sequence of digits. '
+         'During the first execution, zoterocleanup automatically asks for the '
+         'library if it is not specified. After that, zoterocleanup remembers '
+         'the library from the first exeution, but it can be changed with this '
+         'argument.')
 subparsers = parser.add_subparsers(help='sub-command help')
 
 # author-names
@@ -16,7 +23,7 @@ subparser = subparsers.add_parser(
     help='Find author names that seem to be different spellings of the same '
          'author. ')
 subparser.set_defaults(
-    func=lambda a: merge_authors())
+    func=lambda a: merge_authors(a.library))
 
 # journal abbreviations
 # subparser = subparsers.add_parser('abbr')
@@ -27,7 +34,7 @@ subparser = subparsers.add_parser(
     'doi',
     help='Check for missing DOIs')
 subparser.set_defaults(
-    func=lambda a: check_for_missing_dois())
+    func=lambda a: check_for_missing_dois(a.library))
 
 # notes
 subparser = subparsers.add_parser(
@@ -44,7 +51,7 @@ subparser.add_argument(
     default=AUTO_TOC_START,
     help="Pattern to match notes")
 subparser.set_defaults(
-    func=lambda a: remove_notes(a.verbose, a.pattern))
+    func=lambda a: remove_notes(a.library, a.verbose, a.pattern))
 
 # parse and execute
 args = parser.parse_args()

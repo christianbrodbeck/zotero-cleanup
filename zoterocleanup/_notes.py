@@ -9,11 +9,13 @@ from ._zotero import connect
 AUTO_TOC_START = '<p(?: id="title")?><strong>Contents</strong></p>'
 
 
-def remove_notes(verbose=True, pattern=AUTO_TOC_START):
+def remove_notes(library=None, verbose=True, pattern=AUTO_TOC_START):
     """Remove notes matching a pattern
     
     Parameters
     ----------
+    library : str
+        Library ID.
     verbose : bool
         Print all the notes that would be removed.
     pattern : str
@@ -23,7 +25,7 @@ def remove_notes(verbose=True, pattern=AUTO_TOC_START):
     """
     if pattern is None:
         pattern = AUTO_TOC_START
-    z = connect()
+    z = connect(library)
     print("Retrieving Library...")
     items = z.everything(z.top())
     print("Scanning children for notes...")
